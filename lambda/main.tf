@@ -34,19 +34,25 @@ resource "aws_lambda_permission" "lambda_api_gateway_permission" {
   source_arn = "${var.api_execution_arn}/*/*"
 }
 
+// one per distinct REST method specified
 resource "aws_apigatewayv2_integration" "api_gateway_lambda_integration" {
+  for_each = toset([for route in var.routes : route.method])
+
   api_id             = var.api_id
   integration_type   = "AWS_PROXY"
   connection_type    = "INTERNET"
   description        = "API gateway integration for lambda ${var.name}"
-  integration_method = upper(trimspace(var.method))
+  integration_method = upper(trimspace(each.key))
   integration_uri    = aws_lambda_function.lambda.invoke_arn
 }
 
+// one per route specified
 resource "aws_apigatewayv2_route" "route" {
+  for_each = var.routes
+
   api_id    = var.api_id
-  route_key = "${upper(trimspace(var.method))} ${trimspace(var.path)}"
-  target    = "integrations/${aws_apigatewayv2_integration.api_gateway_lambda_integration.id}"
+  route_key = "${upper(trimspace(each.value.method))} ${trimspace(each.value.path)}"
+  target    = "integrations/${aws_apigatewayv2_integration.api_gateway_lambda_integration[each.value.method].id}"
 }
 
 resource "aws_apigatewayv2_deployment" "deployment" {

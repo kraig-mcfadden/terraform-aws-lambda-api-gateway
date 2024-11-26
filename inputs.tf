@@ -15,9 +15,11 @@ variable "subdomain_prefix" {
 
 variable "lambdas" {
   type = set(object({
-    name   = string,
-    method = string,
-    path   = string,
+    name = string,
+    routes = set(object({
+      method = string,
+      path   = string,
+    })),
   }))
   description = "Lambda definitions"
 }

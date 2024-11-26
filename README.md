@@ -40,7 +40,7 @@ Creates one or more lambdas that source code from an S3 bucket and are fronted b
 |------|-------------|------|---------|:--------:|
 | <a name="input_app_name"></a> [app\_name](#input\_app\_name) | The overall name of the app. ex. gmail | `string` | n/a | yes |
 | <a name="input_domain"></a> [domain](#input\_domain) | Domain for this API. Must have a hosted zone and ACM cert. ex. google.com | `string` | n/a | yes |
-| <a name="input_lambdas"></a> [lambdas](#input\_lambdas) | Lambda definitions | <pre>set(object({<br/>    name   = string,<br/>    method = string,<br/>    path   = string,<br/>  }))</pre> | n/a | yes |
+| <a name="input_lambdas"></a> [lambdas](#input\_lambdas) | Lambda definitions | <pre>set(object({<br/>    name = string,<br/>    routes = set(object({<br/>      method = string,<br/>      path   = string,<br/>    })),<br/>  }))</pre> | n/a | yes |
 | <a name="input_subdomain_prefix"></a> [subdomain\_prefix](#input\_subdomain\_prefix) | The subdomain name to host this API. ex. mail | `string` | n/a | yes |
 
 ## Outputs

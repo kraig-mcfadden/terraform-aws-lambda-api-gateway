@@ -83,8 +83,7 @@ module "lambdas" {
   source   = "./lambda"
 
   name   = each.value.name
-  method = each.value.method
-  path   = each.value.path
+  routes = each.value.routes
 
   api_id            = aws_apigatewayv2_api.api_gateway.id
   api_execution_arn = aws_apigatewayv2_api.api_gateway.execution_arn

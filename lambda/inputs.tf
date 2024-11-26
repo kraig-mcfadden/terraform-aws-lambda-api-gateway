@@ -3,14 +3,12 @@ variable "name" {
   description = "Name of this lambda"
 }
 
-variable "method" {
-  type        = string
-  description = "REST verb for hitting lambda; e.g. GET, POST"
-}
-
-variable "path" {
-  type        = string
-  description = "Where to send requests; e.g. /emails"
+variable "routes" {
+  type = set(object({
+    method = string,
+    path   = string,
+  }))
+  description = "REST verb and path for hitting lambda; e.g. GET /emails"
 }
 
 variable "api_id" {
