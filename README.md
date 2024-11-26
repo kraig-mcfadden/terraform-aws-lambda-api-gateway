@@ -48,5 +48,6 @@ Creates one or more lambdas that source code from an S3 bucket and are fronted b
 | Name | Description |
 |------|-------------|
 | <a name="output_artifact_bucket_arn"></a> [artifact\_bucket\_arn](#output\_artifact\_bucket\_arn) | n/a |
+| <a name="output_lambda_arns"></a> [lambda\_arns](#output\_lambda\_arns) | n/a |
 | <a name="output_lambda_role_arns"></a> [lambda\_role\_arns](#output\_lambda\_role\_arns) | n/a |
 <!-- END_TF_DOCS -->

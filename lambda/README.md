@@ -48,5 +48,6 @@ No modules.
 
 | Name | Description |
 |------|-------------|
+| <a name="output_lambda_arn"></a> [lambda\_arn](#output\_lambda\_arn) | n/a |
 | <a name="output_role_arn"></a> [role\_arn](#output\_role\_arn) | n/a |
 <!-- END_TF_DOCS -->
