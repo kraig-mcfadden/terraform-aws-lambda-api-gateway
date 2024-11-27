@@ -50,7 +50,7 @@ resource "aws_apigatewayv2_route" "route" {
 
   api_id    = var.api_id
   route_key = "${upper(trimspace(each.value.method))} ${trimspace(each.value.path)}"
-  target    = "integrations/${aws_apigatewayv2_integration.api_gateway_lambda_integration[each.value.method].id}"
+  target    = "integrations/${aws_apigatewayv2_integration.api_gateway_lambda_integration.id}"
 }
 
 resource "aws_apigatewayv2_deployment" "deployment" {
