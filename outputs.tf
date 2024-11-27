@@ -3,9 +3,9 @@ output "artifact_bucket_arn" {
 }
 
 output "lambda_role_arns" {
-  value = module.lambdas.role_arn
+  value = { for lambda_name, outputs in module.lambdas : lambda_name => outputs.role_arn }
 }
 
 output "lambda_arns" {
-  value = module.lambdas.lambda_arn
+  value = { for lambda_name, outputs in module.lambdas : lambda_name => outputs.lambda_arn }
 }

@@ -79,10 +79,10 @@ resource "aws_apigatewayv2_api_mapping" "api_mapping" {
 /* ------- Lambdas ------- */
 
 module "lambdas" {
-  for_each = { for i, lambda in var.lambdas : i => lambda }
+  for_each = var.lambdas
   source   = "./lambda"
 
-  name   = each.value.name
+  name   = each.key
   routes = each.value.routes
 
   api_id            = aws_apigatewayv2_api.api_gateway.id

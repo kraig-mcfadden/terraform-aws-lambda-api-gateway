@@ -14,12 +14,11 @@ variable "subdomain_prefix" {
 }
 
 variable "lambdas" {
-  type = list(object({
-    name = string,
+  type = map(object({
     routes = list(object({
       method = string,
       path   = string,
     })),
   }))
-  description = "Lambda definitions"
+  description = "Lambda definitions. Key is the name, value is lambda props"
 }
