@@ -4,7 +4,7 @@ variable "name" {
 }
 
 variable "routes" {
-  type = set(object({
+  type = list(object({
     method = string,
     path   = string,
   }))

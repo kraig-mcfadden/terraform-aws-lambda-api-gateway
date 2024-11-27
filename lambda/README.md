@@ -42,7 +42,7 @@ No modules.
 | <a name="input_artifact_bucket"></a> [artifact\_bucket](#input\_artifact\_bucket) | Name of the bucket where lambda will pull source code from | `string` | n/a | yes |
 | <a name="input_env_vars"></a> [env\_vars](#input\_env\_vars) | Optional set of environment variables | `map(string)` | `{}` | no |
 | <a name="input_name"></a> [name](#input\_name) | Name of this lambda | `string` | n/a | yes |
-| <a name="input_routes"></a> [routes](#input\_routes) | REST verb and path for hitting lambda; e.g. GET /emails | <pre>set(object({<br/>    method = string,<br/>    path   = string,<br/>  }))</pre> | n/a | yes |
+| <a name="input_routes"></a> [routes](#input\_routes) | REST verb and path for hitting lambda; e.g. GET /emails | <pre>list(object({<br/>    method = string,<br/>    path   = string,<br/>  }))</pre> | n/a | yes |
 
 ## Outputs
 
