@@ -24,7 +24,7 @@ resource "aws_apigatewayv2_api" "api_gateway" {
 
   cors_configuration {
     allow_origins = toset(["https://${var.domain}"])
-    allow_methods = toset([for lambda_def in var.lambdas : [upper(trimspace(lambda_def.method))]])
+    allow_methods = toset(flatten([for lambda_def in var.lambdas : [for route in lambda_def.routes : upper(trimspace(route.method))]]))
   }
 }
 
@@ -79,7 +79,7 @@ resource "aws_apigatewayv2_api_mapping" "api_mapping" {
 /* ------- Lambdas ------- */
 
 module "lambdas" {
-  for_each = var.lambdas
+  for_each = { for i, lambda in var.lambdas : i => lambda }
   source   = "./lambda"
 
   name   = each.value.name

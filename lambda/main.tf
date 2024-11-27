@@ -48,7 +48,7 @@ resource "aws_apigatewayv2_integration" "api_gateway_lambda_integration" {
 
 // one per route specified
 resource "aws_apigatewayv2_route" "route" {
-  for_each = var.routes
+  for_each = { for i, route in var.routes : i => route }
 
   api_id    = var.api_id
   route_key = "${upper(trimspace(each.value.method))} ${trimspace(each.value.path)}"
