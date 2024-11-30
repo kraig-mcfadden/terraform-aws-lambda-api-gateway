@@ -19,6 +19,7 @@ variable "lambdas" {
       method = string,
       path   = string,
     })),
+    env_vars = map(string)
   }))
   description = "Lambda definitions. Key is the name, value is lambda props"
 }

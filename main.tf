@@ -82,8 +82,9 @@ module "lambdas" {
   for_each = var.lambdas
   source   = "./lambda"
 
-  name   = each.key
-  routes = each.value.routes
+  name     = each.key
+  routes   = each.value.routes
+  env_vars = each.value.env_vars
 
   api_id            = aws_apigatewayv2_api.api_gateway.id
   api_execution_arn = aws_apigatewayv2_api.api_gateway.execution_arn
