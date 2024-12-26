@@ -39,6 +39,7 @@ Creates one or more lambdas that source code from an S3 bucket and are fronted b
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
 | <a name="input_app_name"></a> [app\_name](#input\_app\_name) | The overall name of the app. ex. gmail | `string` | n/a | yes |
+| <a name="input_cors"></a> [cors](#input\_cors) | Optional, additional CORS rules | <pre>object({<br/>    allowed_headers = list(string)<br/>    allowed_methods = list(string)<br/>    allowed_origins = list(string)<br/>  })</pre> | <pre>{<br/>  "allowed_headers": [],<br/>  "allowed_methods": [],<br/>  "allowed_origins": []<br/>}</pre> | no |
 | <a name="input_domain"></a> [domain](#input\_domain) | Domain for this API. Must have a hosted zone and ACM cert. ex. google.com | `string` | n/a | yes |
 | <a name="input_lambdas"></a> [lambdas](#input\_lambdas) | Lambda definitions. Key is the name, value is lambda props | <pre>map(object({<br/>    routes = list(object({<br/>      method = string,<br/>      path   = string,<br/>    })),<br/>    env_vars = map(string)<br/>  }))</pre> | n/a | yes |
 | <a name="input_subdomain_prefix"></a> [subdomain\_prefix](#input\_subdomain\_prefix) | The subdomain name to host this API. ex. mail | `string` | n/a | yes |

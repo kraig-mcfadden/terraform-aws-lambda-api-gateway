@@ -23,8 +23,9 @@ resource "aws_apigatewayv2_api" "api_gateway" {
   protocol_type = "HTTP"
 
   cors_configuration {
-    allow_origins = toset(["https://${var.domain}"])
-    allow_methods = toset(flatten([for lambda_def in var.lambdas : [for route in lambda_def.routes : upper(trimspace(route.method))]]))
+    allow_origins = toset(concat(["https://${var.domain}"], var.cors.allowed_origins))
+    allow_methods = toset(concat(flatten([for lambda_def in var.lambdas : [for route in lambda_def.routes : upper(trimspace(route.method))]]), var.cors.allowed_methods))
+    allow_headers = toset(var.cors.allowed_headers)
   }
 }
 

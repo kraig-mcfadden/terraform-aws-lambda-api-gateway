@@ -23,3 +23,17 @@ variable "lambdas" {
   }))
   description = "Lambda definitions. Key is the name, value is lambda props"
 }
+
+variable "cors" {
+  type = object({
+    allowed_headers = list(string)
+    allowed_methods = list(string)
+    allowed_origins = list(string)
+  })
+  default = {
+    allowed_headers = []
+    allowed_methods = []
+    allowed_origins = []
+  }
+  description = "Optional, additional CORS rules"
+}
