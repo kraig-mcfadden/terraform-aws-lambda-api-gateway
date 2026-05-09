@@ -29,12 +29,10 @@ resource "aws_lambda_permission" "lambda_api_gateway_permission" {
   function_name = aws_lambda_function.lambda.function_name
   principal     = "apigateway.amazonaws.com"
 
-  # The /*/* portion grants access from any method on any resource
-  # within the API Gateway "REST API".
+  # /*/* matches any stage and any route on this v2 HTTP API.
   source_arn = "${var.api_execution_arn}/*/*"
 }
 
-// one per distinct REST method specified
 resource "aws_apigatewayv2_integration" "api_gateway_lambda_integration" {
   api_id             = var.api_id
   integration_type   = "AWS_PROXY"
@@ -44,7 +42,6 @@ resource "aws_apigatewayv2_integration" "api_gateway_lambda_integration" {
   integration_uri    = aws_lambda_function.lambda.invoke_arn
 }
 
-// one per route specified
 resource "aws_apigatewayv2_route" "route" {
   for_each = { for i, route in var.routes : i => route }
 
@@ -53,18 +50,10 @@ resource "aws_apigatewayv2_route" "route" {
   target    = "integrations/${aws_apigatewayv2_integration.api_gateway_lambda_integration.id}"
 }
 
-resource "aws_apigatewayv2_deployment" "deployment" {
-  api_id      = var.api_id
-  description = "${var.name} API deployment"
+resource "aws_apigatewayv2_route" "default" {
+  count = var.catch_all ? 1 : 0
 
-  triggers = {
-    redeployment = sha1(join(",", tolist([
-      jsonencode(aws_apigatewayv2_integration.api_gateway_lambda_integration),
-      jsonencode(aws_apigatewayv2_route.route),
-    ])))
-  }
-
-  lifecycle {
-    create_before_destroy = true
-  }
+  api_id    = var.api_id
+  route_key = "$default"
+  target    = "integrations/${aws_apigatewayv2_integration.api_gateway_lambda_integration.id}"
 }
