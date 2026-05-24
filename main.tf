@@ -1,3 +1,13 @@
+locals {
+  any_catch_all = anytrue([for l in var.lambdas : l.catch_all])
+
+  cors_methods = local.any_catch_all ? ["*"] : flatten([
+    for lambda_def in var.lambdas : [
+      for route in lambda_def.routes : upper(trimspace(route.method))
+    ]
+  ])
+}
+
 /* ------- S3 Artifact Bucket ------- */
 
 resource "aws_s3_bucket" "artifact_bucket" {
@@ -12,8 +22,17 @@ resource "aws_s3_bucket_server_side_encryption_configuration" "artifact_bucket_s
       sse_algorithm = "AES256"
     }
 
-    bucket_key_enabled = "true"
+    bucket_key_enabled = true
   }
+}
+
+resource "aws_s3_bucket_public_access_block" "artifact_bucket_pab" {
+  bucket = aws_s3_bucket.artifact_bucket.id
+
+  block_public_acls       = true
+  block_public_policy     = true
+  ignore_public_acls      = true
+  restrict_public_buckets = true
 }
 
 /* ------- API Gateway ------- */
@@ -24,14 +43,15 @@ resource "aws_apigatewayv2_api" "api_gateway" {
 
   cors_configuration {
     allow_origins = toset(concat(["https://${var.domain}"], var.cors.allowed_origins))
-    allow_methods = toset(concat(flatten([for lambda_def in var.lambdas : [for route in lambda_def.routes : upper(trimspace(route.method))]]), var.cors.allowed_methods))
+    allow_methods = toset(concat(local.cors_methods, var.cors.allowed_methods))
     allow_headers = toset(var.cors.allowed_headers)
   }
 }
 
 resource "aws_apigatewayv2_stage" "stage" {
-  api_id = aws_apigatewayv2_api.api_gateway.id
-  name   = var.subdomain_prefix
+  api_id      = aws_apigatewayv2_api.api_gateway.id
+  name        = var.subdomain_prefix
+  auto_deploy = true
 
   default_route_settings {
     throttling_burst_limit = 5
@@ -83,9 +103,10 @@ module "lambdas" {
   for_each = var.lambdas
   source   = "./lambda"
 
-  name     = each.key
-  routes   = each.value.routes
-  env_vars = each.value.env_vars
+  name      = each.key
+  routes    = each.value.routes
+  catch_all = each.value.catch_all
+  env_vars  = each.value.env_vars
 
   api_id            = aws_apigatewayv2_api.api_gateway.id
   api_execution_arn = aws_apigatewayv2_api.api_gateway.execution_arn

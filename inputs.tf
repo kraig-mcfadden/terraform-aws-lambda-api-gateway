@@ -15,13 +15,14 @@ variable "subdomain_prefix" {
 
 variable "lambdas" {
   type = map(object({
-    routes = list(object({
+    routes = optional(list(object({
       method = string,
       path   = string,
-    })),
-    env_vars = map(string)
+    })), []),
+    catch_all = optional(bool, false),
+    env_vars  = map(string)
   }))
-  description = "Lambda definitions. Key is the name, value is lambda props"
+  description = "Lambda definitions. Key is the name, value is lambda props. Set catch_all = true to send all unmatched requests to that lambda via the v2 HTTP API $default route."
 }
 
 variable "cors" {
@@ -35,5 +36,5 @@ variable "cors" {
     allowed_methods = []
     allowed_origins = []
   }
-  description = "Optional, additional CORS rules"
+  description = "Optional, additional CORS rules. When any lambda has catch_all = true, allow_methods is forced to [\"*\"] since route methods aren't enumerable."
 }
