@@ -38,3 +38,13 @@ variable "env_vars" {
   description = "Optional set of environment variables"
   default     = {}
 }
+
+variable "vpc_config" {
+  type = object({
+    vpc_id                        = string
+    subnet_ids                    = list(string)
+    additional_security_group_ids = optional(list(string), [])
+  })
+  default     = null
+  description = "If set, VPC-attaches the lambda. subnet_ids should be private subnets in 2+ AZs. The module creates an SG in vpc_id and outputs its id; additional_security_group_ids are attached on top of it."
+}

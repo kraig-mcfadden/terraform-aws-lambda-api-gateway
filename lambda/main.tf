@@ -15,8 +15,20 @@ resource "aws_lambda_function" "lambda" {
     variables = var.env_vars
   }
 
+  dynamic "vpc_config" {
+    for_each = var.vpc_config != null ? [var.vpc_config] : []
+    content {
+      subnet_ids = vpc_config.value.subnet_ids
+      security_group_ids = concat(
+        [aws_security_group.lambda[0].id],
+        vpc_config.value.additional_security_group_ids,
+      )
+    }
+  }
+
   depends_on = [
     aws_iam_role_policy_attachment.lambda_logging_policy_attachment,
+    aws_iam_role_policy_attachment.lambda_vpc_access,
     aws_cloudwatch_log_group.lambda_log_group,
   ]
 }

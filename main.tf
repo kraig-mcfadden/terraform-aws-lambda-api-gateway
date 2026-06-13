@@ -103,10 +103,11 @@ module "lambdas" {
   for_each = var.lambdas
   source   = "./lambda"
 
-  name      = each.key
-  routes    = each.value.routes
-  catch_all = each.value.catch_all
-  env_vars  = each.value.env_vars
+  name       = each.key
+  routes     = each.value.routes
+  catch_all  = each.value.catch_all
+  env_vars   = each.value.env_vars
+  vpc_config = each.value.vpc_config
 
   api_id            = aws_apigatewayv2_api.api_gateway.id
   api_execution_arn = aws_apigatewayv2_api.api_gateway.execution_arn

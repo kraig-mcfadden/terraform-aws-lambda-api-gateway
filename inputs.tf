@@ -21,8 +21,13 @@ variable "lambdas" {
     })), []),
     catch_all = optional(bool, false),
     env_vars  = map(string)
+    vpc_config = optional(object({
+      vpc_id                        = string
+      subnet_ids                    = list(string)
+      additional_security_group_ids = optional(list(string), [])
+    }))
   }))
-  description = "Lambda definitions. Key is the name, value is lambda props. Set catch_all = true to send all unmatched requests to that lambda via the v2 HTTP API $default route."
+  description = "Lambda definitions. Key is the name, value is lambda props. Set catch_all = true to send all unmatched requests to that lambda via the v2 HTTP API $default route. Set vpc_config to VPC-attach the lambda; the module creates an SG per lambda and exposes its id via lambda_security_group_ids."
 }
 
 variable "cors" {
